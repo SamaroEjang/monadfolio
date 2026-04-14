@@ -1,14 +1,18 @@
 const fetch = require('node-fetch');
+
 const DEFILLAMA_POOLS_URL = 'https://yields.llama.fi/pools';
-const DEFILLAMA_PRICE_URL = 'https://coins.llama.fi/prices/current/coingecko:monad';
+const DEFILLAMA_PRICE_URL = 'https://coins.llama.fi/prices/current/coingecko:monad?searchWidth=4h';
 const SHMONAD_STATS_URL = 'https://api.shmonad.xyz/stats';
 const FALLBACK_APY = null;
+
 let cachedMarketData = null;
 let cacheTimestamp = 0;
 const CACHE_TTL_MS = 3 * 60 * 1000;
+
 async function getMonPrice() {
+  // Source 1: DefiLlama (no rate limit, most reliable)
   try {
-    const res = await fetch(DEFILLAMA_PRICE_URL, { timeout: 5000 });
+    const res = await fetch(DEFILLAMA_PRICE_URL, { timeout: 8000 });
     if (res.ok) {
       const data = await res.json();
       const price = data?.coins?.['coingecko:monad']?.price;
@@ -18,6 +22,8 @@ async function getMonPrice() {
       }
     }
   } catch (err) { console.warn('DefiLlama price failed:', err.message); }
+
+  // Source 2: CoinGecko fallback
   try {
     const res = await fetch(
       'https://api.coingecko.com/api/v3/simple/price?ids=monad&vs_currencies=usd',
@@ -32,9 +38,11 @@ async function getMonPrice() {
       }
     }
   } catch (err) { console.warn('CoinGecko failed:', err.message); }
+
   console.warn('All price sources failed');
   return null;
 }
+
 async function getShMonApy() {
   try {
     const res = await fetch(SHMONAD_STATS_URL, { timeout: 5000 });
@@ -48,6 +56,7 @@ async function getShMonApy() {
       }
     }
   } catch (err) { console.warn('shMonad API failed:', err.message); }
+
   try {
     const res = await fetch(DEFILLAMA_POOLS_URL, { timeout: 20000 });
     if (res.ok) {
@@ -69,8 +78,10 @@ async function getShMonApy() {
       }
     }
   } catch (err) { console.warn('DefiLlama APY failed:', err.message); }
+
   return { apy: FALLBACK_APY, apyBase: FALLBACK_APY, tvlUsd: null };
 }
+
 async function getMarketData() {
   const now = Date.now();
   if (cachedMarketData && now - cacheTimestamp < CACHE_TTL_MS) {
@@ -81,4 +92,5 @@ async function getMarketData() {
   cacheTimestamp = now;
   return cachedMarketData;
 }
+
 module.exports = { getMarketData };
