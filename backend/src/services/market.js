@@ -10,6 +10,22 @@ let cacheTimestamp = 0;
 const CACHE_TTL_MS = 3 * 60 * 1000;
 
 async function getMonPrice() {
+
+  // Source 0: Binance (no rate limit, no key needed)
+  try {
+    const res = await fetch(
+      'https://api.binance.com/api/v3/ticker/price?symbol=MONUSDT',
+      { timeout: 5000 }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      const price = parseFloat(data?.price);
+      if (price && price > 0) {
+        console.log(`MON price from Binance: $${price}`);
+        return price;
+      }
+    }
+  } catch (err) { console.warn('Binance failed:', err.message); }
   // Source 1: DefiLlama (no rate limit, most reliable)
   try {
     const res = await fetch(DEFILLAMA_PRICE_URL, { timeout: 8000 });
