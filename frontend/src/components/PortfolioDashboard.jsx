@@ -11,9 +11,11 @@ function fmt(n, decimals = 4) {
   });
 }
 
-function fmtUsd(n) {
+function fmtUsd(n, decimals) {
   if (n === null || n === undefined) return '—';
-  return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const d = decimals ?? (n < 0.1 ? 4 : 2);
+  return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+
 }
 
 function fmtApy(n) {
