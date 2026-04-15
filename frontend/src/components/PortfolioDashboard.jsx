@@ -196,7 +196,7 @@ export default function PortfolioDashboard({ data }) {
           />
           <StatCard
             label="Protocol TVL"
-            value={market.tvlUsd ? fmtUsd(market.tvlUsd) : '—'}
+           value={market.tvlUsd ? '$' + Math.round(market.tvlUsd).toLocaleString('en-US') : '—'}
             sub="Total value locked"
           />
           <StatCard
