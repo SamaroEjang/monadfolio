@@ -112,7 +112,7 @@ export default function App() {
         <header style={styles.header}>
           <div style={styles.logo}>
             <div style={styles.logoMark}>M</div>
-            <span style={styles.logoText}>MonFolio</span>
+            <span style={styles.logoText}>Monfolio</span>
           </div>
           <p style={styles.tagline}>
             Track your shMON liquid staking position on Monad Mainnet
