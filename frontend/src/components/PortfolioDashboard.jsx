@@ -3,14 +3,13 @@ import StatCard from './StatCard';
 import NarrationCard from './NarrationCard';
 import YieldCalculator from './YieldCalculator';
 
-function fmt(n, decimals = 4) {
+function fmt(n, decimals = 0) {
   if (n === null || n === undefined) return '—';
   return Number(n).toLocaleString('en-US', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
 }
-
 function fmtUsd(n, decimals) {
   if (n === null || n === undefined) return '—';
   const d = decimals ?? (n < 0.1 ? 4 : 2);
