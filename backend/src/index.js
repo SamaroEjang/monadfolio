@@ -2,21 +2,17 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const portfolioRoutes = require('./routes/portfolio');
-
 const app = express();
 const PORT = process.env.PORT || 3001;
-
 app.use(cors({
-  origin: ['https://monfolio-mu.vercel.app', 'http://localhost:3000'],
+  origin: ['https://monadfolio-mu.vercel.app', 'http://localhost:3000'],
   methods: ['GET'],
-}));app.use(express.json());
-
+}));
+app.use(express.json());
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', app: 'MonFolio' });
+  res.json({ status: 'ok', app: 'Monfolio' });
 });
-
 app.use('/api', portfolioRoutes);
-
 app.listen(PORT, () => {
-  console.log(`MonFolio backend running on port ${PORT}`);
+  console.log(`Monfolio backend running on port ${PORT}`);
 });
